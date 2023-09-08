@@ -1,0 +1,23 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Porfomo - Agregar Avatar {{ usuario.username }} {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <h3>{{ mensaje }}</h3>
+
+    <form action="{% url 'agregarAvatar' %}" method="POST"> {% csrf_token %}
+
+        <table>
+    
+            {{ form.as_table }}
+    
+        </table>
+    
+        <input type="submit" value="Send">
+        
+    </form>
+    
+{% endblock %}

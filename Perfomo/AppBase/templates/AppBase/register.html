@@ -1,0 +1,24 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Porfomo - Register{% endblock %}
+
+{% block contenido_que_cambia %}
+
+<form action="{% url 'register' %}" method="POST"> {% csrf_token %}
+
+    <table>
+
+        {{ form.as_table }}
+
+    </table>
+
+    <input type="submit" value="Register">
+
+
+</form>
+
+<H3> {{ mensaje }} </H3>
+
+{% endblock %}
