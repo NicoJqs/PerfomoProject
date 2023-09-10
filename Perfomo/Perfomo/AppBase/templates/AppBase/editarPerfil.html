@@ -1,0 +1,27 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Porfomo - Editar Perfil {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <h3>{{ mensaje }}</h3>
+
+<div class="container card-body" style=" width: 25vw; margin-left : 40%;">
+    <form class="form-group" action="{% url 'editarPerfil' %}" method="POST"> {% csrf_token %}
+
+        <table>
+    
+            {{ form.as_table }}
+    
+        </table>
+        <br>
+        <div class="card-footer text-center">
+            <input class="btn btn-primary" type="submit" value="Confirm">
+            <a href="{% url 'agregarAvatar' %}" class="btn btn-success">Add Avatar</a>
+        </div>
+    </form>
+    <br>
+</div>
+{% endblock %}

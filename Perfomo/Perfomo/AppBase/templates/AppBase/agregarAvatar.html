@@ -1,0 +1,27 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Agregar Avatar {{ usuario.username }} {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <h3>{{ mensaje }}</h3>
+
+    <form action="{% url 'agregarAvatar'  %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
+        <table>
+    
+            {{ form.as_table }}
+    
+        </table>
+    
+        <div class="card-footer text-center">
+            <input class="btn btn-primary" type="submit" value="Confirm">
+            <a href="{% url 'listPublicaciones' %}" class="btn btn-outline-danger">Cancel</a>
+        </div>
+        
+    </form>
+    <br>
+    
+{% endblock %}

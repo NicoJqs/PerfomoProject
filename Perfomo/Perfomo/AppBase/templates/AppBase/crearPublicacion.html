@@ -1,0 +1,21 @@
+{% extends "AppBase/padre.html" %}
+
+
+{% block titulo %} Crear Publicacion {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<h3>{{ mensaje }}</h3>
+<div class="container d-flex justify-content-center" >
+    <form class="form-group card" style="width: 720px; margin-bottom: 10px;" method="POST" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            {{ form.as_p}}
+    </form>   
+</div>
+<div class="container d-flex justify-content-center">
+    <input type="submit" class="btn btn-success" value="Confirm">
+    <a href="{% url 'listPublicaciones' %}" class="btn btn-outline-danger">Cancel</a>
+</div>
+<br>
+
+{% endblock %}

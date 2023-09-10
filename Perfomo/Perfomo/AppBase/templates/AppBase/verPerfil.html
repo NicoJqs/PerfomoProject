@@ -1,0 +1,23 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Porfomo - Detalle {% endblock %}
+
+{% block contenido_que_cambia %}
+<div class="container text-center">
+    <div class="card" style="width: 720px;">
+        <div class="card-body">
+            {% if perfume.imagenPerfume %}
+                <img class="rounded mx-auto d-block" src="{{perfume.imagenPerfume.url}}" alt="" style="width:360px;height:480px;" >
+            {% endif %}
+            <h5 class="card-title d-flex justify-content-center">{{perfume.marca}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted d-flex justify-content-center">{{perfume.modelo}} - {{perfume.tipo}}</h6>
+            <p class="card-text justify-content-center">{{perfume.descripcion}}</p>
+            <p class="card-footer bg-transparent d-flex justify-content-center" >Año de creacion:  <i>{{perfume.year}}</i></p>
+        </div>
+    </div>
+</div>
+<br>
+
+{% endblock %}

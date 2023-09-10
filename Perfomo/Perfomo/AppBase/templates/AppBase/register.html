@@ -1,0 +1,32 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Register {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<br>
+<br>
+
+<div class="container card-body">
+
+    <form class="form-group" action="{% url 'register' %}" method="POST" style=" width: 50vw; margin-left : 32%;"> 
+
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input class="btn btn-primary" type="submit" value="Confirm">
+
+    </form>
+</div>
+<br>
+
+<div class="container text-center">
+    <p><a href="{% url 'login' %}" style="color: aqua;">Log in</a></p>
+</div>
+
+<H3> {{ mensaje }} </H3>
+
+{% endblock %}
