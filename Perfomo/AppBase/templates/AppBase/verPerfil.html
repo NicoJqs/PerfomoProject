@@ -1,0 +1,25 @@
+{% extends "AppBase/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Porfomo - Detalle {% endblock %}
+
+{% block contenido_que_cambia %}
+<div class="container card">
+    <div class="card-body">
+    {% if profile %}
+        <p>Nombre de usuario: {{ user.username}}</p>
+        {% if profile.linkedin_url %}
+            <p>LinkedIn: <a href="{{ profile.linkedin_url }}" target="_blank">{{ profile.linkedin_url }}</a></p>
+        {% endif %}
+        {% if profile.github_url %}
+            <p>GitHub: <a href="{{ profile.github_url }}" target="_blank">{{ profile.github_url }}</a></p>
+        {% endif %}
+        <!-- Otros campos de perfil, si los tienes -->
+    {% else %}
+        <p>No se ha encontrado un perfil para este usuario.</p>
+    {% endif %}
+    </div>
+</div>
+<br>
+{% endblock %}

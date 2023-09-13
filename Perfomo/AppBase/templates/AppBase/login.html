@@ -1,26 +1,27 @@
 {% extends "AppBase/padre.html" %}
 
-{% load static %}
-
-{% block titulo %} Porfomo - Login{% endblock %}
+{% block titulo %} Login {% endblock %}
 
 {% block contenido_que_cambia %}
 
-    <h3>{{ mensaje }}</h3>
+<div class="container card-body">
 
-    <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
+    <form class="form-group" action="{% url 'login' %}" method="POST" style=" width: 50vw; margin-left : 32%;"> 
 
+        {% csrf_token %}
         <table>
-    
             {{ form.as_table }}
-    
         </table>
-    
-        <input type="submit" value="INGRESAR">
-    
-    
-    
-    
+        <input class="btn btn-primary" type="submit" value="Confirm">
+
     </form>
-    
+</div>
+<br>
+
+<div class="container text-center">
+    <p><a href="{% url 'register' %}" style="color: aqua;">Register an Account</a></p>
+</div>
+
+<H3> {{ mensaje }} </H3>
+
 {% endblock %}

@@ -14,10 +14,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
 from django import forms
-from .models import Perfume, Comentario, Avatar, Perfume
-from .forms import RegistroUsuarioForm, UserEditForm, AvatarForm, PerfumeForms
+from .models import Perfume, Avatar, Perfume, Mensaje, Profile
+from .forms import RegistroUsuarioForm, UserEditForm, AvatarForm, PerfumeForms, MensajeForm, ProfileForm
 
-@login_required
 def obtenerAvatar(request):
 
     avatares=Avatar.objects.filter(user=request.user.id)
@@ -42,7 +41,7 @@ def register(request):
             info=form.cleaned_data
             nombre_usuario=info["username"]
             form.save()
-            return render(request, "AppBase/inicio.html", {"mensaje":f"Usuario {nombre_usuario} creado correctamente"})
+            return render(request, "AppBase/inicio.html", {"mensaje": f"The Username {nombre_usuario} has been created successfully."})
         else:
             return render(request,"AppBase/register.html", {"form":form, "mensaje":"Datos invalidos"})
 
@@ -61,11 +60,11 @@ def login_request(request):
             usuario=authenticate(username=usu, password=clave)
             if usuario is not None:
                 login(request, usuario)
-                return render(request, "AppBase/inicio.html", {"mensaje":f"Usuario {usu} logueado correctamente"})
+                return render(request, "AppBase/inicio.html", {"mensaje":f"The username {usu} has been successfully logged in."})
             else:
                 return render(request, "AppBase/login.html", {"form":form, "mensaje":"Datos invalidos (1)"})
         else:
-            return render(request, "AppBase/login.html", {"form":form, "mensaje":"Datos invalidos (2)"})
+            return render(request, "AppBase/login.html", {"form":form, "mensaje":"The username or password is not correct. Try again."})
     else:
         form=AuthenticationForm()
         return render(request, "AppBase/login.html", {"form":form})
@@ -118,9 +117,120 @@ def crear_publicacion(request):
     if request.method == 'POST':
         form = PerfumeForms(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return render(request, "AppBase/inicio.html", {"mensaje":"Publicacion creada Correctamente"})
+            perfume = form.save(commit=False)
+            if form.cleaned_data['year']:
+                perfume.usuario = request.user
+                perfume.save()
+                return render(request, "AppBase/inicio.html", {"mensaje":"Publicacion creada Correctamente"})
+            else:
+                form.add_error('year', 'El campo "Año de creación" es obligatorio.')
+        else:
+            return render(request, "AppBase/crearPublicacion.html", {"mensaje": "Error, no se pudo generar la publicacion."})
     else:
-        form = PerfumeForms()
-    
+        form = PerfumeForms()    
+        
     return render(request, "AppBase/crearPublicacion.html", {'form': form})
+
+@login_required
+def editarPublicacion(request, id):
+    perfume = Perfume.objects.get(id = id)
+    if request.method == 'POST':
+        form = PerfumeForms(request.POST)
+        if form.is_valid():
+            info = form.cleaned_data
+            perfume.marca = info["marca"]
+            perfume.modelo = info["modelo"]
+            perfume.tipo = info["tipo"]
+            perfume.descripcion = info["descripcion"]
+            perfume.year = info["year"]
+            perfume.imagenPerfume = info["imagenPerfume"]
+            perfume.save()
+
+            mensaje = "Publicacion editada."
+            perfumes = Perfume.objects.all()
+            form_perfume = PerfumeForms()
+            return render(request, "AppBase/inicio.html", {"mensaje":mensaje, "form": form_perfume})
+    else:
+        form_perfume = PerfumeForms( initial={"marca": perfume.marca, "modelo": perfume.modelo, "tipo": perfume.tipo, "descripcion": perfume.descripcion, "year": perfume.year, "imagenPerfume": perfume.imagenPerfume})
+        return render(request, "AppBase/editarPublicacion.html", {"form": form_perfume, "perfume": perfume})
+    
+    
+class PerfumeList(ListView):
+    model = Perfume
+    template_name = "AppBase/listPublicaciones.html"
+
+
+class PerfumeUpdate(LoginRequiredMixin, UpdateView):
+    model = Perfume
+    template_name = "AppBase/perfume_editar.html"
+    success_url = reverse_lazy("listPublicaciones")
+    fields = ['marca', 'modelo', 'tipo', 'descripcion', 'year', 'imagenPerfume']
+
+
+class PerfumeDelete(LoginRequiredMixin, DeleteView):
+    model = Perfume
+    success_url = reverse_lazy("listPublicaciones")
+
+
+class PerfumeDetalle(DetailView):
+    model = Perfume
+    template_name = "AppBase/perfume_detalle.html"
+
+
+def about(request):
+    return render(request, "AppBase/aboutMe.html",)
+
+
+@login_required
+def enviarMensaje(request):
+    if request.method == 'POST':
+        form = MensajeForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return redirect('inbox')
+    else:
+        form = MensajeForm()
+    
+    return render(request, 'AppBase/enviarMensaje.html', {'form': form})
+
+
+@login_required
+def inbox(request):
+
+    messages_received = Mensaje.objects.filter(receiver=request.user)
+    
+    return render(request, 'AppBase/inbox.html', {'messages_received': messages_received})
+
+
+@login_required 
+def edit_profile(request):
+    user = request.user  # Obtén el usuario actual
+    try:
+        profile = Profile.objects.get(pk=user.pk)
+    except Profile.DoesNotExist:
+        profile = None
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.instance.user = user  # Asigna el usuario al perfil antes de guardarlo
+            form.save()
+            return redirect('verPerfil')
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'AppBase/editarLink.html', {'form': form})
+
+
+@login_required
+def view_profile(request):
+    user = request.user 
+
+    try:
+        profile = Profile.objects.get(pk=user.pk)
+    except Profile.DoesNotExist:
+        profile = None
+
+    return render(request, 'AppBase/verPerfil.html', {'profile': profile})

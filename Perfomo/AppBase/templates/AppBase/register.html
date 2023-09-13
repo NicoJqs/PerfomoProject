@@ -2,22 +2,30 @@
 
 {% load static %}
 
-{% block titulo %} Porfomo - Register{% endblock %}
+{% block titulo %} Register {% endblock %}
 
 {% block contenido_que_cambia %}
 
-<form action="{% url 'register' %}" method="POST"> {% csrf_token %}
+<br>
+<br>
 
-    <table>
+<div class="container card-body">
 
-        {{ form.as_table }}
+    <form class="form-group" action="{% url 'register' %}" method="POST" style=" width: 50vw; margin-left : 32%;"> 
 
-    </table>
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input class="btn btn-primary" type="submit" value="Confirm">
 
-    <input type="submit" value="Register">
+    </form>
+</div>
+<br>
 
-
-</form>
+<div class="container text-center">
+    <p><a href="{% url 'login' %}" style="color: aqua;">Log in</a></p>
+</div>
 
 <H3> {{ mensaje }} </H3>
 

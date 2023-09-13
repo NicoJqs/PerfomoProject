@@ -8,16 +8,22 @@
 
     <h3>{{ mensaje }}</h3>
 
-    <form action="{% url 'editarPerfil' %}" method="POST"> {% csrf_token %}
+<div class="container card-body" style=" width: 25vw; margin-left : 40%;">
+    <form class="form-group" action="{% url 'editarPerfil' %}" method="POST"> {% csrf_token %}
 
         <table>
     
             {{ form.as_table }}
+            
     
         </table>
-    
-        <input type="submit" value="Send">
-        
+        <br>
+        <div class="card-footer text-center">
+            <input class="btn btn-primary" type="submit" value="Confirm">
+            <a href="{% url 'agregarAvatar' %}" class="btn btn-success">Add Avatar</a>
+            <a href="{% url 'editarLink' %}" class="btn btn-info">Add Social Links</a>
+        </div>
     </form>
-    
+    <br>
+</div>
 {% endblock %}
