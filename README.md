@@ -1,2 +1,8 @@
 # PerfomoProject
-Proyecto creado para emulacion de compra y venta de perfumes.
+Proyecto Creado para la resena de perfumes.
+
+
+
+
+
+# https://youtu.be/-LQiORWHYwg
